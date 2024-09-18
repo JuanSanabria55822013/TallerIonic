@@ -1,0 +1,17 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Inicio</ion-title>
+  </ion-toolbar>
+</ion-header>
+<div>INICIO</div>
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+  </ion-header>
+  <ion-list>
+    <ion-item *ngFor = "let materia of controlMateria">
+      <ion-label>
+        {{materia.nombre}} {{materia.semestre}} {{EstadoMateria(materia)}}
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

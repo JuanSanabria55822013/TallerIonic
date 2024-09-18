@@ -1,0 +1,7 @@
+{
+  "name": "TallerIonic",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
