@@ -1,13 +1,17 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>Materia</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
+  <ion-header>
     <ion-toolbar>
-      <ion-title size="large">Materia</ion-title>
+      <ion-title>Agregar Materia</ion-title>
     </ion-toolbar>
   </ion-header>
-</ion-content>
+  
+  <ion-content>
+    <ion-item>
+      <ion-label position="floating">Nombre</ion-label>
+      <ion-input [(ngModel)]="materia.nombre"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Semestre</ion-label>
+      <ion-input [(ngModel)]="materia.semestre"></ion-input>
+    </ion-item>
+  </ion-content>
