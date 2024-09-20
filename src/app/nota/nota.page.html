@@ -8,23 +8,22 @@
   <form (ngSubmit)="crearNota()">
     <ion-item>
       <ion-label position="floating">Descripción</ion-label>
-      <ion-input [(ngModel)]="nota.descripcion" name="descripcion"></ion-input>
+      <ion-input [(ngModel)]="nota.descripcion" name="descripcion" required=""></ion-input>
     </ion-item>
     
     <ion-item>
       <ion-label position="floating">Nota</ion-label>
-      <ion-input type="number" [(ngModel)]="nota.nota" name="nota" min="0" max="5" step="0.01"></ion-input>
+      <ion-input type="number" [(ngModel)]="nota.nota" name="nota" min="0" max="5" step="0.01" required=""></ion-input>
     </ion-item>
     
     <ion-item>
       <ion-label position="floating">Corte</ion-label>
-      <ion-input type="number" [(ngModel)]="nota.corte" name="corte" min="1" max="4"></ion-input>
+      <ion-input type="number" [(ngModel)]="nota.corte" name="corte" min="1" max="4" required=""></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label position="floating">Fecha de Entrega</ion-label>
-      <iond-datatime-buttom [(ngModel)]="nota.fechaEntrega" name="fechaEntrega"> </iond-datatime-buttom>
-      <ion-input type="date" [(ngModel)]="nota.fechaEntrega" name="fechaEntrega"></ion-input>
+      <ion-input type="date" [(ngModel)]="nota.fechaEntrega" name="fechaEntrega" required=""></ion-input>
     </ion-item>
     
     <ion-button type="submit">Agregar Nota</ion-button>

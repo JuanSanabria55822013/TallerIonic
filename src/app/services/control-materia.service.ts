@@ -7,7 +7,7 @@ import { Injectable } from '@angular/core';
 })
 export class ControlMateriaService {
   private ControlMateria: Materia[] = [];
-  private STORAGE_KEY = 'Control';
+  private STORAGENOTA_KEY = 'Control';
 
   constructor(private storage: Storage) {
     this.init();
@@ -20,7 +20,7 @@ export class ControlMateriaService {
   }
 
   async loadMaterias() {
-    let materias = await this.storage.get(this.STORAGE_KEY);
+    let materias = await this.storage.get(this.STORAGENOTA_KEY);
     if (materias) {
       this.ControlMateria = materias;
     } else {
@@ -57,7 +57,7 @@ export class ControlMateriaService {
   }
 
   private async GuardarStorage() {
-    await this.storage.set(this.STORAGE_KEY, this.ControlMateria);
+    await this.storage.set(this.STORAGENOTA_KEY, this.ControlMateria);
     this.loadMaterias();
   }
 

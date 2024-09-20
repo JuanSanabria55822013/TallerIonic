@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core'; 
+import { FormsModule } from "@angular/forms";
 import { CommonModule } from '@angular/common';
 import { IonicStorageModule } from '@ionic/storage-angular';
 import { Routes, RouterModule } from '@angular/router';
@@ -10,14 +11,15 @@ const routes: Routes = [
   { path: '', redirectTo: 'inicio', pathMatch: 'full' },
   { path: 'inicio', component: InicioPage },
   { path: 'materia', component: MateriaPage },
-  { path: 'notas/:id', component: NotaPage }, // Nueva ruta para notas con ID de la materia
+  { path: 'nota', component: NotaPage }, 
 ];
 
 @NgModule({
   imports: [
     CommonModule,
     IonicStorageModule.forRoot(),
-    [RouterModule.forRoot(routes)]
+    [RouterModule.forRoot(routes)],
+    FormsModule
   ],
   exports: [RouterModule],
 })

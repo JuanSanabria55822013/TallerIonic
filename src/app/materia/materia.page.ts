@@ -6,14 +6,24 @@ import { ControlMateriaService } from '../services/control-materia.service';
 import { ControlNotaService } from '../services/nota.service';
 import { Materia } from '../Models/materia';
 import { Nota } from '../Models/nota';
-import { Router } from '@angular/router'; // Importar Router
+import { Router } from '@angular/router'; // Importar Rutas
 
 @Component({
   selector: 'app-materia',
   templateUrl: './materia.page.html',
   styleUrls: ['./materia.page.scss'],
   standalone: true,
-  imports: [IonList, IonInput, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, IonItem, IonLabel, IonButton, FormsModule]
+  imports: [IonList,
+    IonInput,
+    IonContent, 
+    IonHeader,
+    IonTitle,
+    IonToolbar,
+    CommonModule,
+    IonItem,
+    IonLabel,
+    IonButton,
+    FormsModule]
 })
 export class MateriaPage implements OnInit {
 controlNota: Nota[] = [];
