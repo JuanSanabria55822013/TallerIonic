@@ -17,5 +17,9 @@ export const routes: Routes = [
   {
     path: 'materia',
     loadComponent: () => import('./materia/materia.page').then( m => m.MateriaPage)
+  },  {
+    path: 'nota',
+    loadComponent: () => import('./nota/nota.page').then( m => m.NotaPage)
   },
+
 ];

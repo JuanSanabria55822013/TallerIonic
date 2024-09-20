@@ -9,3 +9,6 @@ export interface Materia {
     observaciones: string;
     notas: Nota[];
 }
+
+export{Nota} 
+

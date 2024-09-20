@@ -1,4 +1,4 @@
-// import {Storage} from '@ionic/storage-angular';
+import { Storage } from '@ionic/storage-angular';
 import { Materia } from '../Models/materia';
 import { Injectable } from '@angular/core';
 
@@ -7,45 +7,65 @@ import { Injectable } from '@angular/core';
 })
 export class ControlMateriaService {
   private ControlMateria: Materia[] = [];
+  private STORAGE_KEY = 'Control';
 
-  // constructor( private storage: Storage) { 
-  //   this.init();
-  // }
+  constructor(private storage: Storage) {
+    this.init();
+  }
 
-  // async init() {
-  //   this.storage.create();
-  //   this.ControlMateria = await this.storage.get('ControlMateria');
-  // }
+  async init() {
+    const storage = await this.storage.create();
+    this.storage = storage;
+    await this.loadMaterias();  // Cargar materias una vez creado el Storage
+  }
 
-  getControlMateria() {
-    return this.ControlMateria
+  async loadMaterias() {
+    let materias = await this.storage.get(this.STORAGE_KEY);
+    if (materias) {
+      this.ControlMateria = materias;
+    } else {
+      this.ControlMateria = [];  // Si no hay materias, inicializa como arreglo vacío
+    }
+  }
+
+
+  async getControlMateria(): Promise<Materia[]> {
+    await this.loadMaterias();
+    return this.ControlMateria;
   }
 
   getMateria(id: number) {
     return this.ControlMateria.find(m => m.id === id);
   }
 
-  CrearMateria(materia: Materia) {
+  async CrearMateria(materia: Materia) {
     this.ControlMateria.push(materia);
-    // this.GuardarStorage();
+    await this.GuardarStorage();  // Guardar después de crear
   }
 
-  ActualizarMateria(materia: Materia) {
+  async ActualizarMateria(materia: Materia) {
     const index = this.ControlMateria.findIndex(m => m.id === materia.id);
     if (index !== -1) {
       this.ControlMateria[index] = materia;
-      // this.GuardarStorage();
+      await this.GuardarStorage();
     }
   }
 
-  BorarMateria(id: number) {
+  async BorrarMateria(id: number) {
     this.ControlMateria = this.ControlMateria.filter(m => m.id !== id);
-    // this.GuardarStorage();
+    this.GuardarStorage();
   }
 
-  // private GuardarStorage() {
-  //   this.storage.set('ControlMateria', this.ControlMateria);
-  // }
+  private async GuardarStorage() {
+    await this.storage.set(this.STORAGE_KEY, this.ControlMateria);
+    this.loadMaterias();
+  }
+
+  public async clear(){
+    this.storage.clear();
+    this.ControlMateria = [];
+    this.loadMaterias();
+  }
 
   Promedio(materia: Materia): number {
     const notasPorCorte = [0, 0, 0, 0];
@@ -61,5 +81,5 @@ export class ControlMateriaService {
     const promedio = this.Promedio(materia);
     return promedio >= 3.0;
   }
-
 }
+

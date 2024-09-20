@@ -1,6 +1,6 @@
 export interface Nota {
     id: number;
-    fechaEntrega: Date;
+    fechaEntrega: string;
     descripcion: string;
     nota: number;
     observaciones: string;

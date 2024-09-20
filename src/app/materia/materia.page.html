@@ -1,17 +1,53 @@
-<ion-header [translucent]="true">
-  <ion-header>
-    <ion-toolbar>
-      <ion-title>Agregar Materia</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  
-  <ion-content>
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Crear Materia</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list *ngIf="controlNota.length === 0 || controlNota.length > 0 ">
+    <ion-item *ngFor="let nota of controlNota" (click)="irANota()">
+      <ion-label>
+        {{nota.nota}} - {{nota.descripcion}} -{{nota.corte}}
+      </ion-label>
+    </ion-item>
+  </ion-list>
+  <form (ngSubmit)="crearMateria()">
+
     <ion-item>
       <ion-label position="floating">Nombre</ion-label>
-      <ion-input [(ngModel)]="materia.nombre"></ion-input>
+      <ion-input [(ngModel)]="materia.id" name="ID" required=""></ion-input>
     </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Nombre</ion-label>
+      <ion-input [(ngModel)]="materia.nombre" name="nombre" required=""></ion-input>
+    </ion-item>
+    
     <ion-item>
       <ion-label position="floating">Semestre</ion-label>
-      <ion-input [(ngModel)]="materia.semestre"></ion-input>
+      <ion-input [(ngModel)]="materia.semestre" name="semestre" required=></ion-input>
     </ion-item>
-  </ion-content>
+    
+    <ion-item>
+      <ion-label position="floating">Código</ion-label>
+      <ion-input [(ngModel)]="materia.codigo" name="codigo" required=></ion-input>
+    </ion-item>
+    
+    <ion-item>
+      <ion-label position="floating">Horario</ion-label>
+      <ion-input [(ngModel)]="materia.horario" name="horario" required=></ion-input>
+    </ion-item>
+    
+    <ion-item>
+      <ion-label position="floating">Observaciones</ion-label>
+      <ion-input [(ngModel)]="materia.observaciones" name="Observaciones" required=></ion-input>
+    </ion-item>
+    
+    <ion-button type="submit">Guardar Materia</ion-button>
+    <ion-button (click)="irANota()">Agregar Nota</ion-button>
+    <ion-button (click)="clearStorage()">Limpiar Storage</ion-button>
+  </form>
+
+
+</ion-content>

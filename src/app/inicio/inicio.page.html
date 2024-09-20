@@ -1,20 +1,21 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>Inicio</ion-title>
-  </ion-toolbar>
-</ion-header>
-<div>INICIO</div>
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-  </ion-header>
-  <ion-list>
-    <ion-item *ngFor = "let materia of controlMateria">
+<ion-content>
+  <!-- Si no hay materias, mostrar un mensaje -->
+  <div *ngIf="controlMateria.length === 0" class="no-materias">
+    <p>No tienes materias registradas aún.</p>
+    <ion-button (click)="irAMateria()">Agregar Materia</ion-button>
+  </div>
+
+
+  <!-- Lista de materias cuando sí existen -->
+  <ion-list *ngIf="controlMateria.length === 0 || controlMateria.length > 0 ">
+    <ion-item *ngFor="let materia of controlMateria" (click)="irAMateria()">
       <ion-label>
-        {{materia.nombre}} {{materia.semestre}} {{EstadoMateria(materia)}}
+        {{materia.nombre}} - {{EstadoMateria(materia)}}
       </ion-label>
     </ion-item>
   </ion-list>
-  <ion-button  routerLink="/materia-form">
-    Crear Materia
-  </ion-button>
+
+  <!-- Botón para agregar una nueva materia -->
+  <ion-button (click)="irAMateria()">Agregar Materia</ion-button>
+  <ion-button (click)="clearStorage()">Limpiar Storage</ion-button>
 </ion-content>
