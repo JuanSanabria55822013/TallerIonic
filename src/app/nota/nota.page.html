@@ -7,6 +7,11 @@
 <ion-content>
   <form (ngSubmit)="crearNota()">
     <ion-item>
+      <ion-label position="floating">ID</ion-label>
+      <ion-input [(ngModel)]="nota.id" name="descripcion" ></ion-input>
+    </ion-item>
+
+    <ion-item>
       <ion-label position="floating">Descripción</ion-label>
       <ion-input [(ngModel)]="nota.descripcion" name="descripcion" required=""></ion-input>
     </ion-item>
@@ -26,7 +31,10 @@
       <ion-input type="date" [(ngModel)]="nota.fechaEntrega" name="fechaEntrega" required=""></ion-input>
     </ion-item>
     
-    <ion-button type="submit">Agregar Nota</ion-button>
+    <ion-button type="submit">
+      {{ editando ? 'Guardar Cambios' : 'Crear Nota' }}
+    </ion-button>
+    <ion-button [routerLink] = "['/materia']">Cancelar</ion-button>
   </form>
 
 </ion-content>

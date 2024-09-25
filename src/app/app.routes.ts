@@ -2,12 +2,8 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
-    path: 'home',
-    loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
-  },
-  {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'inicio',
     pathMatch: 'full',
   },
   {
@@ -17,8 +13,17 @@ export const routes: Routes = [
   {
     path: 'materia',
     loadComponent: () => import('./materia/materia.page').then( m => m.MateriaPage)
-  },  {
-    path: 'nota',
+  },
+  {
+    path: 'materia/:materiaID',
+    loadComponent: () => import('./materia/materia.page').then( m => m.MateriaPage)
+  },
+  {
+    path: 'nota/:MateriaId',
+    loadComponent: () => import('./nota/nota.page').then( m => m.NotaPage)
+  },
+  {
+    path: 'nota/:MateriaId/nota/:NotaId',
     loadComponent: () => import('./nota/nota.page').then( m => m.NotaPage)
   },
 

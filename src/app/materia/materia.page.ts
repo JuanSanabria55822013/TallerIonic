@@ -1,19 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule} from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonItem, IonLabel, IonButton, IonInput, IonList } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonItem, IonLabel, IonButton, IonInput, IonList, IonCard } from '@ionic/angular/standalone';
 import { ControlMateriaService } from '../services/control-materia.service';
 import { ControlNotaService } from '../services/nota.service';
 import { Materia } from '../Models/materia';
 import { Nota } from '../Models/nota';
-import { Router } from '@angular/router'; // Importar Rutas
+import { Router, RouterModule, ActivatedRoute } from '@angular/router'; // Importar Rutas
 
 @Component({
   selector: 'app-materia',
   templateUrl: './materia.page.html',
   styleUrls: ['./materia.page.scss'],
   standalone: true,
-  imports: [IonList,
+  imports: [IonCard, IonList,
     IonInput,
     IonContent, 
     IonHeader,
@@ -23,10 +23,13 @@ import { Router } from '@angular/router'; // Importar Rutas
     IonItem,
     IonLabel,
     IonButton,
+    RouterModule,
     FormsModule]
 })
 export class MateriaPage implements OnInit {
 controlNota: Nota[] = [];
+materiaID: any;
+editar: boolean = false;
 
   materia: Materia = { 
     id: 1, 
@@ -37,11 +40,25 @@ controlNota: Nota[] = [];
     notas: [], 
     observaciones: '' 
   };
-  constructor(private controlMateriaService: ControlMateriaService, private controlNotaService: ControlNotaService, private router: Router) { }
-  async ngOnInit(): Promise<void> {
+  constructor(private controlMateriaService: ControlMateriaService, private controlNotaService: ControlNotaService, private router: Router, private activatedRoute: ActivatedRoute) { }
+  async ngOnInit() {
+    this.materiaID = this.activatedRoute.snapshot.paramMap.get('materiaID')
     await this.loadNotas();
+
+    if(this.materiaID){
+      this.editar = true;
+      await this.loadMateria(this.materiaID)
+    }
   }
 
+  async loadMateria(id: number){
+    const materia = await this.controlMateriaService.getMateria(id);
+    if(materia){
+      this.materia = materia;
+    } else {
+      console.error('Materia no encontrada')
+    }
+  }
   async loadNotas() {
     this.controlNota = await this.controlNotaService.getControlNota();
   }
@@ -53,12 +70,17 @@ controlNota: Nota[] = [];
     
   }
   irANota() {
-    this.router.navigate([`/nota`]);
+    this.router.navigate([`/nota/`,this.materia.id]);
   }
 
   async clearStorage(){
     await this.controlNotaService.clear();
     this.controlNota = []
   }
+
+  async borrarNota(id: number){
+    await this.controlNotaService.BorrarNota(id)
+  }
+
 }
 

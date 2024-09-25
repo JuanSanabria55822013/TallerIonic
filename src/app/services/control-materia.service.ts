@@ -66,20 +66,6 @@ export class ControlMateriaService {
     this.ControlMateria = [];
     this.loadMaterias();
   }
-
-  Promedio(materia: Materia): number {
-    const notasPorCorte = [0, 0, 0, 0];
-    const totalPorcentaje = [20, 20, 20, 40];
-    materia.notas.forEach(nota => {
-      notasPorCorte[nota.corte - 1] += nota.nota;
-    });
-    const promedio = notasPorCorte.reduce((total, nota, index) => total + (nota * totalPorcentaje[index] / 100), 0);
-    return parseFloat(promedio.toFixed(2));
-  }
-
-  Paso(materia: Materia): boolean {
-    const promedio = this.Promedio(materia);
-    return promedio >= 3.0;
-  }
+  
 }
 

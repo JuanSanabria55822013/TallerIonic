@@ -6,9 +6,11 @@
 
 <ion-content>
   <ion-list *ngIf="controlNota.length === 0 || controlNota.length > 0 ">
-    <ion-item *ngFor="let nota of controlNota" (click)="irANota()">
+    <ion-item *ngFor="let nota of controlNota">
       <ion-label>
-        {{nota.nota}} - {{nota.descripcion}} -{{nota.corte}}
+        {{nota.nota}} - {{nota.descripcion}} - {{nota.corte}} - {{nota.idMateria}} - {{nota.fechaEntrega}} 
+        <button [routerLink] = "['/nota', materia.id, 'nota', nota.id]">MODIFICAR</button> ----
+        <button (click)="borrarNota(nota.id)">BORRAR</button> 
       </ion-label>
     </ion-item>
   </ion-list>
@@ -45,7 +47,7 @@
     </ion-item>
     
     <ion-button type="submit">Guardar Materia</ion-button>
-    <ion-button (click)="irANota()">Agregar Nota</ion-button>
+    <ion-button [routerLink] = "['/nota', materia.id]">Agregar Nota</ion-button>
     <ion-button (click)="clearStorage()">Limpiar Storage</ion-button>
   </form>
 

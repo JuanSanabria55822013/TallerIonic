@@ -28,7 +28,6 @@ export class ControlNotaService {
     }
   }
 
-
   async getControlNota(): Promise<Nota[]> {
     await this.loadNotas();
     return this.ControlNota;

@@ -1,21 +1,48 @@
-<ion-content>
-  <!-- Si no hay materias, mostrar un mensaje -->
-  <div *ngIf="controlMateria.length === 0" class="no-materias">
-    <p>No tienes materias registradas aún.</p>
-    <ion-button (click)="irAMateria()">Agregar Materia</ion-button>
-  </div>
+<ion-menu contentId="main-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Menú</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">
+    <!-- Aquí puedes agregar elementos del menú, como navegación -->
+    <ion-list>
+      <ion-item [routerLink]="['/inicio']">Inicio</ion-item>
+      <ion-item [routerLink]="['/materia']">Materias</ion-item>
+      <!-- Agrega más opciones de navegación si es necesario -->
+    </ion-list>
+  </ion-content>
+</ion-menu>
 
+<!-- Contenido principal de la página -->
+<div class="ion-page" id="main-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button> <!-- Botón para abrir el menú -->
+      </ion-buttons>
+      <ion-title>Materias</ion-title>
+    </ion-toolbar>
+  </ion-header>
 
-  <!-- Lista de materias cuando sí existen -->
-  <ion-list *ngIf="controlMateria.length === 0 || controlMateria.length > 0 ">
-    <ion-item *ngFor="let materia of controlMateria" (click)="irAMateria()">
-      <ion-label>
-        {{materia.nombre}} - {{EstadoMateria(materia)}}
-      </ion-label>
-    </ion-item>
-  </ion-list>
+  <ion-content> 
+    <!-- Si no hay materias, mostrar un mensaje -->
+    <div *ngIf="controlMateria.length === 0" class="no-materias">
+      <p>No tienes materias registradas aún.</p>
+      <ion-button [routerLink]="['/materia']">Agregar Materia</ion-button>
+    </div>
 
-  <!-- Botón para agregar una nueva materia -->
-  <ion-button (click)="irAMateria()">Agregar Materia</ion-button>
-  <ion-button (click)="clearStorage()">Limpiar Storage</ion-button>
-</ion-content>
+    <!-- Lista de materias cuando sí existen -->
+    <ion-list *ngIf="controlMateria.length > 0">
+      <ion-item *ngFor="let materia of controlMateria" [routerLink]="['/materia', materia.id]">
+        <ion-label>
+          {{materia.nombre}} - {{materia.notas}}
+        </ion-label>
+      </ion-item>
+    </ion-list>
+
+    <!-- Botón para agregar una nueva materia -->
+    <ion-button [routerLink]="['/materia']">Agregar Materia</ion-button>
+    <ion-button (click)="clearStorage()">Limpiar Storage</ion-button>
+  </ion-content>
+</div>
