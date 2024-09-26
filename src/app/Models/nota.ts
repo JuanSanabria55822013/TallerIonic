@@ -1,6 +1,6 @@
 export interface Nota {
-    idMateria: number;
     id: number;
+    idMateria: number;
     fechaEntrega: string;
     descripcion: string;
     nota: number;

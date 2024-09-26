@@ -1,0 +1,35 @@
+ion-toolbar{
+    --background: #1e1e2c
+    --color: #fff;
+}
+
+.contendor_corte{
+    margin-bottom: 20px;
+}
+
+.corte_card{
+    --background: #F7F7F9;
+  --ion-color-primary: #007AFF;
+  --ion-color-primary-contrast: #ffffff;
+}
+
+ion-item{
+    --background: #ffffff;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.no-notas{
+    text-align: center;
+    margin: 20px 0;
+}
+
+.no-notas{
+    color: #a0a0a0;
+    font-size: 18px;
+}
+
+ion-button{
+    margin-right: 10px;
+}

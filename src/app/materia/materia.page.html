@@ -1,23 +1,61 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Crear Materia</ion-title>
-  </ion-toolbar>
-</ion-header>
 
-<ion-content>
-  <ion-list *ngIf="controlNota.length === 0 || controlNota.length > 0 ">
-    <ion-item *ngFor="let nota of controlNota">
-      <ion-label>
-        {{nota.nota}} - {{nota.descripcion}} - {{nota.corte}} - {{nota.idMateria}} - {{nota.fechaEntrega}} 
-        <button [routerLink] = "['/nota', materia.id, 'nota', nota.id]">MODIFICAR</button> ----
-        <button (click)="borrarNota(nota.id)">BORRAR</button> 
-      </ion-label>
-    </ion-item>
-  </ion-list>
+<ion-menu contentId="main-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Menú</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">
+
+
+    <ion-list>
+      <ion-item [routerLink]="['/inicio']">
+        <h2>Inicio</h2>
+      </ion-item>
+
+
+      <ion-item >
+        <ion-list *ngIf="controlMateria.length > 0">
+          <h2>Materias</h2>
+          <ion-item *ngFor="let materia of controlMateria" [routerLink]="['/materia', materia.id]">
+              {{materia.nombre}}
+          </ion-item>
+        </ion-list>
+      </ion-item>
+
+
+      <ion-item [routerLink]="['/materia']">
+        Crear Materia
+      </ion-item>
+
+    </ion-list>
+  </ion-content>
+</ion-menu>
+
+<div class="ion-page" id="main-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons>
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-title>{{titulo}}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content> 
+
+
+<ion-content  class="contenedor">
+
+  <!--Codigo por si no hay notas mostrar un mensaje-->
+  <div *ngIf="controlNota.length === 0" class="no-notas">
+    <p>No hay notas registradas --- Agregue nuevas notas</p>
+  </div>
+
+  <!--Formulario para introducir materia, yo creo que toca dejarlo a parte -->
   <form (ngSubmit)="crearMateria()">
 
     <ion-item>
-      <ion-label position="floating">Nombre</ion-label>
+      <ion-label position="floating">ID</ion-label>
       <ion-input [(ngModel)]="materia.id" name="ID" required=""></ion-input>
     </ion-item>
 
@@ -28,17 +66,17 @@
     
     <ion-item>
       <ion-label position="floating">Semestre</ion-label>
-      <ion-input [(ngModel)]="materia.semestre" name="semestre" required=></ion-input>
+      <ion-input [(ngModel)]="materia.semestre" name="semestre" type="number" required=></ion-input>
     </ion-item>
     
     <ion-item>
       <ion-label position="floating">Código</ion-label>
-      <ion-input [(ngModel)]="materia.codigo" name="codigo" required=></ion-input>
+      <ion-input [(ngModel)]="materia.codigo" name="codigo" type="number" required=></ion-input>
     </ion-item>
     
     <ion-item>
       <ion-label position="floating">Horario</ion-label>
-      <ion-input [(ngModel)]="materia.horario" name="horario" required=></ion-input>
+      <ion-input [(ngModel)]="materia.horario" name="horario" type="number" required=></ion-input>
     </ion-item>
     
     <ion-item>
@@ -46,10 +84,37 @@
       <ion-input [(ngModel)]="materia.observaciones" name="Observaciones" required=></ion-input>
     </ion-item>
     
-    <ion-button type="submit">Guardar Materia</ion-button>
-    <ion-button [routerLink] = "['/nota', materia.id]">Agregar Nota</ion-button>
-    <ion-button (click)="clearStorage()">Limpiar Storage</ion-button>
+    <ion-button expand="block" fill="solid" type="submit" color="medium">Guardar Materia</ion-button>
+    <ion-button expand="block" fill="solid" color="medium" [routerLink] = "['/nota', materia.id]">Agregar Nota</ion-button>
+    <ion-button expand="block" fill="solid" color="medium" (click)="clearStorage()">Limpiar Storage</ion-button>
+    <ion-button expand="block" fill="solid" color="medium" [routerLink]="['/inicio']">Volver al Inicio</ion-button>
   </form>
 
-
+  <!--Mostrar notas por corte-->
+  <div *ngIf="editar === true">
+    <div *ngFor="let corte of [1, 2, 3, 4]" class="contenedor_corte">
+      <ion-card class="corte_card">
+        <ion-card-header>
+          <ion-card-title class="corte_titulo">Corte: {{corte}}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-list *ngIf="notasFiltradasCorte[corte] && notasFiltradasCorte[corte].length > 0">
+            <ion-item *ngFor="let nota of notasFiltradasCorte[corte]" class="nota_card">
+              <p>ID: {{nota.id}}</p>
+              <p>Nota: {{nota.nota}}</p>
+              <p>Fecha de entrega: {{nota.fechaEntrega}}</p>
+              <ion-buttons slot="end">
+                <ion-button color="success" [routerLink]="['/nota', materia.id, 'nota', nota.id]">MODIFICAR</ion-button>
+                <ion-button color="danger" (click)="borrarNota(nota.id)">BORRAR</ion-button>
+              </ion-buttons>
+            </ion-item>
+          </ion-list>
+          <!-- Mostrar mensaje si no hay notas para el corte actual -->
+          <p *ngIf="!notasFiltradasCorte[corte] || notasFiltradasCorte[corte].length === 0">
+            No hay notas registradas para este corte.
+          </p>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
 </ion-content>

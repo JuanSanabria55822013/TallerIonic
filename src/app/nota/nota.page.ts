@@ -27,10 +27,13 @@ import { Router, ActivatedRoute,  RouterModule } from '@angular/router';
 export class NotaPage implements OnInit{
 MateriaID: any;
 notaID: any;
-editando: boolean = false; 
+TextGuardar = '';
+editando: boolean = false;
+notasFiltradasPorCorte: { [corte: number]: Nota[] } = {};
+
   nota: Nota = { 
+    id: 1,
     idMateria: 0,
-    id: 1, 
     corte: 1,
     nota: 0, 
     descripcion: '',
@@ -43,15 +46,14 @@ editando: boolean = false;
 async ngOnInit(){ 
   this.notaID = this.activatedRoute.snapshot.paramMap.get('NotaId')
   this.MateriaID = this.activatedRoute.snapshot.paramMap.get('MateriaId')
-  this.nota.idMateria = this.MateriaID
+
 
   if (this.notaID) {
-    // Si hay un notaId, estamos editando una nota
+    this.TextGuardar = 'Actualizar Nota'
     this.editando = true;
     await this.loadNota(this.notaID);
   } else {
-    // Si no hay notaId, estamos creando una nueva nota
-    this.editando = false;
+    this.TextGuardar = 'Crear Nota'
   }
 
 }
@@ -62,23 +64,24 @@ async loadNota(id: number) {
   } else {
     console.error('Nota no encontrada');
   }
+
+}
+GuardarNota(){
+  if(this.notaID){
+    this.actualizarNota()
+  } else{
+    this.crearNota()
+  }
 }
 
-async guardarNota() {
-  if (this.editando === true) {
-    // Si estamos editando, actualizamos la nota
+async actualizarNota() {
     await this.controlNotaService.ActualizarNota(this.nota);
-  } else {
-    // Si estamos creando una nueva nota
-    this.nota.idMateria = this.MateriaID;  // Asegurarse de asignar la materia
-    await this.controlNotaService.CrearNota(this.nota);
-  }
-
-  this.router.navigate(['/materia', this.MateriaID]);  // Redirigir a la materia después de guardar
+  this.router.navigate(['/materia', this.nota.idMateria]);  // Redirigir a la materia después de guardar
 }
 
   async crearNota() {
+    this.nota.idMateria = this.MateriaID
     await this.controlNotaService.CrearNota(this.nota);
-    this.router.navigate(['/materia'])
+    this.router.navigate(['/materia', this.nota.idMateria])
   }
 }

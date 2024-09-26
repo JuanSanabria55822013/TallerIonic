@@ -26,5 +26,7 @@ export const routes: Routes = [
     path: 'nota/:MateriaId/nota/:NotaId',
     loadComponent: () => import('./nota/nota.page').then( m => m.NotaPage)
   },
+ 
+
 
 ];

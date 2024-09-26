@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule} from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonItem, IonLabel, IonButton, IonInput, IonList, IonCard } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonItem, IonLabel, IonButton, IonInput, IonList, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonButtons, IonMenu, IonMenuButton } from '@ionic/angular/standalone';
 import { ControlMateriaService } from '../services/control-materia.service';
 import { ControlNotaService } from '../services/nota.service';
 import { Materia } from '../Models/materia';
@@ -13,10 +13,17 @@ import { Router, RouterModule, ActivatedRoute } from '@angular/router'; // Impor
   templateUrl: './materia.page.html',
   styleUrls: ['./materia.page.scss'],
   standalone: true,
-  imports: [IonCard, IonList,
+  imports: [IonButtons,
+    IonCardContent,
+    IonCardTitle,
+    IonCardHeader,
+    IonCard,
+    IonList,
     IonInput,
-    IonContent, 
+    IonContent,
     IonHeader,
+    IonMenu,
+    IonMenuButton,
     IonTitle,
     IonToolbar,
     CommonModule,
@@ -27,18 +34,22 @@ import { Router, RouterModule, ActivatedRoute } from '@angular/router'; // Impor
     FormsModule]
 })
 export class MateriaPage implements OnInit {
+controlMateria: Materia[] = [];
 controlNota: Nota[] = [];
 materiaID: any;
 editar: boolean = false;
+titulo = 'Crear Materia'
+notasFiltradasCorte: { [corte: number]: Nota[] } = {};
 
-  materia: Materia = { 
-    id: 1, 
-    nombre: '', 
-    semestre: '', 
-    codigo: '', 
-    horario: '', 
-    notas: [], 
-    observaciones: '' 
+
+  materia: Materia = {
+    id: 1,
+    nombre: '',
+    semestre: '',
+    codigo: '',
+    horario: '',
+    notas: [],
+    observaciones: ''
   };
   constructor(private controlMateriaService: ControlMateriaService, private controlNotaService: ControlNotaService, private router: Router, private activatedRoute: ActivatedRoute) { }
   async ngOnInit() {
@@ -46,8 +57,12 @@ editar: boolean = false;
     await this.loadNotas();
 
     if(this.materiaID){
-      this.editar = true;
       await this.loadMateria(this.materiaID)
+      console.log(this.materia.nombre)
+      this.titulo = this.materia.nombre
+      this.editar = true;
+      this.filtrarNotasMateria()
+      console.log(this.notasFiltradasCorte)
     }
   }
 
@@ -63,21 +78,39 @@ editar: boolean = false;
     this.controlNota = await this.controlNotaService.getControlNota();
   }
 
+  filtrarNotasMateria() {
+    const cortes = [1, 2, 3, 4]; // Define los cortes
+
+    cortes.forEach(corte => {
+      // Filtrar por materia y corte al mismo tiempo
+      this.notasFiltradasCorte[corte] = this.controlNota.filter(nota =>
+        nota.idMateria === this.materia.id && nota.corte === corte
+      );
+    });
+  }
+
+
+  // crear la materia, guardarla en el storage
   async crearMateria() {
     await this.controlMateriaService.CrearMateria(this.materia); // Guardar materia
     await this.controlMateriaService.loadMaterias()
     this.router.navigate(['/inicio']);  // Navegar de vuelta al inicio
-    
-  }
-  irANota() {
-    this.router.navigate([`/nota/`,this.materia.id]);
+
   }
 
+  // para ir a crear una nueva nota y guardar la materia de paso
+  async irANota() {
+    this.router.navigate([`/nota/`,this.materia.id])
+    await this.controlMateriaService.CrearMateria(this.materia);;
+  }
+
+  // limpiar todo el storage de notas
   async clearStorage(){
     await this.controlNotaService.clear();
     this.controlNota = []
   }
 
+  // borrar nota de forma individual
   async borrarNota(id: number){
     await this.controlNotaService.BorrarNota(id)
   }

@@ -5,36 +5,54 @@
     </ion-toolbar>
   </ion-header>
   <ion-content class="ion-padding">
-    <!-- Aquí puedes agregar elementos del menú, como navegación -->
+
+
     <ion-list>
-      <ion-item [routerLink]="['/inicio']">Inicio</ion-item>
-      <ion-item [routerLink]="['/materia']">Materias</ion-item>
-      <!-- Agrega más opciones de navegación si es necesario -->
+      <ion-item [routerLink]="['/inicio']">
+        <h2>Inicio</h2>
+      </ion-item>
+
+
+      <ion-item >
+        <ion-list *ngIf="controlMateria.length > 0">
+          <h2>Materias</h2>
+          <ion-item *ngFor="let materia of controlMateria" [routerLink]="['/materia', materia.id]">
+              {{materia.nombre}}
+          </ion-item>
+        </ion-list>
+      </ion-item>
+
+
+      <ion-item [routerLink]="['/materia']">
+        Crear Materia
+      </ion-item>
+
     </ion-list>
   </ion-content>
 </ion-menu>
 
-<!-- Contenido principal de la página -->
+
 <div class="ion-page" id="main-content">
   <ion-header>
     <ion-toolbar>
-      <ion-buttons slot="start">
-        <ion-menu-button></ion-menu-button> <!-- Botón para abrir el menú -->
+      <ion-buttons>
+        <ion-menu-button></ion-menu-button>
       </ion-buttons>
       <ion-title>Materias</ion-title>
+      <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="buscarMateriasYNotas($event)"></ion-searchbar>
     </ion-toolbar>
   </ion-header>
-
   <ion-content> 
-    <!-- Si no hay materias, mostrar un mensaje -->
-    <div *ngIf="controlMateria.length === 0" class="no-materias">
+
+
+    <div *ngIf="controlMateria.length === 0">
       <p>No tienes materias registradas aún.</p>
-      <ion-button [routerLink]="['/materia']">Agregar Materia</ion-button>
     </div>
+
 
     <!-- Lista de materias cuando sí existen -->
     <ion-list *ngIf="controlMateria.length > 0">
-      <ion-item *ngFor="let materia of controlMateria" [routerLink]="['/materia', materia.id]">
+      <ion-item *ngFor="let materia of controlMateria" [routerLink]="['/materia', materia.id]" class="materia_item">
         <ion-label>
           {{materia.nombre}} - {{materia.notas}}
         </ion-label>
@@ -42,7 +60,12 @@
     </ion-list>
 
     <!-- Botón para agregar una nueva materia -->
-    <ion-button [routerLink]="['/materia']">Agregar Materia</ion-button>
-    <ion-button (click)="clearStorage()">Limpiar Storage</ion-button>
+    <ion-button expand="block" fill="solid" color="primary" [routerLink]="['/materia']" class="botonAgregar">
+      Agregar Materia
+    </ion-button>
+
+    <ion-button expand="block" fill="outline" color="danger" (click)="clearStorage()" class="botonLimpiar">
+      Limpiar Storage
+    </ion-button>
   </ion-content>
 </div>
