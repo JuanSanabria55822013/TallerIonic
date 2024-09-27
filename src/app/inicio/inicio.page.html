@@ -39,10 +39,14 @@
         <ion-menu-button></ion-menu-button>
       </ion-buttons>
       <ion-title>Materias</ion-title>
-      <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="buscarMateriasYNotas($event)"></ion-searchbar>
+      <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="buscarMaterias($event)" placeholder="Buscar materias ..."></ion-searchbar>
     </ion-toolbar>
   </ion-header>
   <ion-content> 
+
+    <ion-refresher slot="fixed" (ionRefresh)="ActualizarPagina($event)">
+      <ion-refresher-content pullingText="Desliza para refrescar" refreshingSpinner="circles"></ion-refresher-content>
+    </ion-refresher>
 
 
     <div *ngIf="controlMateria.length === 0">

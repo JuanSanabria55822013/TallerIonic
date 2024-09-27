@@ -13,17 +13,6 @@
         <h2>Inicio</h2>
       </ion-item>
 
-
-      <ion-item >
-        <ion-list *ngIf="controlMateria.length > 0">
-          <h2>Materias</h2>
-          <ion-item *ngFor="let materia of controlMateria" [routerLink]="['/materia', materia.id]">
-              {{materia.nombre}}
-          </ion-item>
-        </ion-list>
-      </ion-item>
-
-
       <ion-item [routerLink]="['/materia']">
         Crear Materia
       </ion-item>
@@ -39,11 +28,16 @@
         <ion-menu-button></ion-menu-button>
       </ion-buttons>
       <ion-title>{{titulo}}</ion-title>
+      <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="buscarNotas($event)" placeholder="Buscar notas ..."></ion-searchbar>
     </ion-toolbar>
   </ion-header>
   <ion-content> 
 
+    <ion-refresher slot="fixed" (ionRefresh)="ActualizarPagina($event)">
+      <ion-refresher-content pullingText="Desliza para refrescar" refreshingSpinner="circles"></ion-refresher-content>
+    </ion-refresher>
 
+    
 <ion-content  class="contenedor">
 
   <!--Codigo por si no hay notas mostrar un mensaje-->
@@ -51,8 +45,8 @@
     <p>No hay notas registradas --- Agregue nuevas notas</p>
   </div>
 
-  <!--Formulario para introducir materia, yo creo que toca dejarlo a parte -->
-  <form (ngSubmit)="crearMateria()">
+  <!--Formulario para introducir materia, yo creo que toca dejarlo a parte ya toco dejarlo en el mismo-->
+  <form (ngSubmit)="GuardarMateria()">
 
     <ion-item>
       <ion-label position="floating">ID</ion-label>
@@ -83,38 +77,44 @@
       <ion-label position="floating">Observaciones</ion-label>
       <ion-input [(ngModel)]="materia.observaciones" name="Observaciones" required=></ion-input>
     </ion-item>
-    
+
     <ion-button expand="block" fill="solid" type="submit" color="medium">Guardar Materia</ion-button>
-    <ion-button expand="block" fill="solid" color="medium" [routerLink] = "['/nota', materia.id]">Agregar Nota</ion-button>
-    <ion-button expand="block" fill="solid" color="medium" (click)="clearStorage()">Limpiar Storage</ion-button>
+    <ion-button expand="block" fill="solid" color="medium"  (click)="IrNota()" [routerLink] = "['/nota', materia.id]">Agregar Nota</ion-button>
     <ion-button expand="block" fill="solid" color="medium" [routerLink]="['/inicio']">Volver al Inicio</ion-button>
   </form>
+        
+  <ion-button expand="block" fill="solid" color="medium" (click)="clearStorage()">Limpiar Storage</ion-button>
 
   <!--Mostrar notas por corte-->
   <div *ngIf="editar === true">
     <div *ngFor="let corte of [1, 2, 3, 4]" class="contenedor_corte">
       <ion-card class="corte_card">
         <ion-card-header>
-          <ion-card-title class="corte_titulo">Corte: {{corte}}</ion-card-title>
+          <ion-card-title>Corte: {{corte}}</ion-card-title>
         </ion-card-header>
         <ion-card-content>
           <ion-list *ngIf="notasFiltradasCorte[corte] && notasFiltradasCorte[corte].length > 0">
-            <ion-item *ngFor="let nota of notasFiltradasCorte[corte]" class="nota_card">
-              <p>ID: {{nota.id}}</p>
-              <p>Nota: {{nota.nota}}</p>
-              <p>Fecha de entrega: {{nota.fechaEntrega}}</p>
-              <ion-buttons slot="end">
-                <ion-button color="success" [routerLink]="['/nota', materia.id, 'nota', nota.id]">MODIFICAR</ion-button>
-                <ion-button color="danger" (click)="borrarNota(nota.id)">BORRAR</ion-button>
+            <ion-item *ngFor="let nota of notasFiltradasCorte[corte]" >
+              <ion-card class="nota_card">
+                <ion-card-title>ID: {{nota.id}} </ion-card-title>
+                <ion-card-subtitle>Nota: {{nota.nota}}</ion-card-subtitle>
+                <ion-card-subtitle>Fecha de entrega: {{nota.fechaEntrega}}  </ion-card-subtitle>
+                <ion-card-subtitle>descripcion: {{nota.descripcion}}</ion-card-subtitle>
+              </ion-card>
+              <ion-buttons class="contenedorBoton" slot="end">
+                <ion-button color="success" fill="solid" [routerLink]="['/nota', materia.id, 'nota', nota.id]">MODIFICAR</ion-button><br>
+                <ion-button color="danger" fill="solid" (click)="confirmarEliminarNota(nota.id)">BORRAR</ion-button>
               </ion-buttons>
             </ion-item>
+          
           </ion-list>
           <!-- Mostrar mensaje si no hay notas para el corte actual -->
           <p *ngIf="!notasFiltradasCorte[corte] || notasFiltradasCorte[corte].length === 0">
             No hay notas registradas para este corte.
           </p>
+       
         </ion-card-content>
       </ion-card>
-    </div>
+    </div> 
   </div>
 </ion-content>

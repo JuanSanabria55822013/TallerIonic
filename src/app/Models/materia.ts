@@ -7,7 +7,7 @@ export interface Materia {
     codigo: string;
     horario: string;
     observaciones: string;
-    notas: Nota[];
+    notas: number[];
 }
 
 export{Nota} 

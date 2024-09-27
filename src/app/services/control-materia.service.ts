@@ -66,6 +66,12 @@ export class ControlMateriaService {
     this.ControlMateria = [];
     this.loadMaterias();
   }
-  
+
+  getNotas(id: number) {
+    const materia = this.ControlMateria.find(m => m.id === id);  // Encuentra la materia por id
+    return materia ? materia.notas : [];  // Si la materia existe, devuelve las notas, si no, un arreglo vacío
+  }
+
+
 }
 

@@ -1,7 +1,7 @@
 import { Component, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonItem, IonLabel, IonList, IonButton, IonInput } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonItem, IonLabel, IonList, IonButton, IonInput, IonSelect, IonSelectOption } from '@ionic/angular/standalone';
 import { ControlNotaService } from '../services/nota.service';
 import { Nota } from '../Models/nota'
 import { Router, ActivatedRoute,  RouterModule } from '@angular/router';
@@ -21,6 +21,8 @@ import { Router, ActivatedRoute,  RouterModule } from '@angular/router';
     CommonModule,
     IonItem,
     IonLabel,
+    IonSelect,
+    IonSelectOption,
     RouterModule,
     FormsModule,]
 })
@@ -29,8 +31,6 @@ MateriaID: any;
 notaID: any;
 TextGuardar = '';
 editando: boolean = false;
-notasFiltradasPorCorte: { [corte: number]: Nota[] } = {};
-
   nota: Nota = { 
     id: 1,
     idMateria: 0,
@@ -46,6 +46,11 @@ notasFiltradasPorCorte: { [corte: number]: Nota[] } = {};
 async ngOnInit(){ 
   this.notaID = this.activatedRoute.snapshot.paramMap.get('NotaId')
   this.MateriaID = this.activatedRoute.snapshot.paramMap.get('MateriaId')
+  this.nota.idMateria = this.MateriaID
+  if(this.nota.nota > 5 || this.nota.nota < 0){
+    alert("La nota no debe ser mayor a 5 o menor de 0")
+    return;
+  }
 
 
   if (this.notaID) {
@@ -84,4 +89,6 @@ async actualizarNota() {
     await this.controlNotaService.CrearNota(this.nota);
     this.router.navigate(['/materia', this.nota.idMateria])
   }
+
+
 }

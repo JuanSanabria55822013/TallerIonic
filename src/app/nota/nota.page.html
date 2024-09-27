@@ -8,27 +8,32 @@
   <form (ngSubmit)="GuardarNota()">
     <ion-item>
       <ion-label position="floating">ID</ion-label>
-      <ion-input [(ngModel)]="nota.id" name="ID" ></ion-input>
+      <ion-input [(ngModel)]="nota.id" name="ID" required></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label position="floating">Descripción</ion-label>
-      <ion-input [(ngModel)]="nota.descripcion" name="descripcion" required=""></ion-input>
+      <ion-input [(ngModel)]="nota.descripcion" name="descripcion" required></ion-input>
     </ion-item>
     
     <ion-item>
-      <ion-label position="floating">Nota</ion-label>
-      <ion-input type="number" [(ngModel)]="nota.nota" name="nota" min="0" max="5" step="0.01" required=""></ion-input>
+      <ion-label position="floating">Nota (0 a 5)</ion-label>
+      <ion-input type="number" [(ngModel)]="nota.nota" name="nota" min="0" max="5" step="0.01" required></ion-input>
     </ion-item>
     
     <ion-item>
       <ion-label position="floating">Corte</ion-label>
-      <ion-input type="number" [(ngModel)]="nota.corte" name="corte" min="1" max="4" required=""></ion-input>
+      <ion-select [(ngModel)]="nota.corte" name="corte" required>
+        <ion-select-option [value]="1">Primer Corte</ion-select-option>
+        <ion-select-option [value]="2">Segundo Corte</ion-select-option>
+        <ion-select-option [value]="3">Tercer Corte</ion-select-option>
+        <ion-select-option [value]="4">Corte Final</ion-select-option>
+      </ion-select>
     </ion-item>
 
     <ion-item>
       <ion-label position="floating">Fecha de Entrega</ion-label>
-      <ion-input type="date" [(ngModel)]="nota.fechaEntrega" name="fechaEntrega" required=""></ion-input>
+      <ion-input type="date" [(ngModel)]="nota.fechaEntrega" name="fechaEntrega" required></ion-input>
     </ion-item>
     
     <ion-button type="submit">{{TextGuardar}}</ion-button>
