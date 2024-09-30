@@ -29,12 +29,12 @@ export class ControlMateriaService {
   }
 
 
-  async getControlMateria(): Promise<Materia[]> {
+  async getControlMateria() {
     await this.loadMaterias();
     return this.ControlMateria;
   }
 
-  getMateria(id: number) {
+ getMateria(id: number) {
     return this.ControlMateria.find(m => m.id === id);
   }
 
@@ -57,6 +57,7 @@ export class ControlMateriaService {
   }
 
   private async GuardarStorage() {
+    console.log('Guardando en Storage: ', this.ControlMateria); 
     await this.storage.set(this.STORAGENOTA_KEY, this.ControlMateria);
     this.loadMaterias();
   }
@@ -66,12 +67,6 @@ export class ControlMateriaService {
     this.ControlMateria = [];
     this.loadMaterias();
   }
-
-  getNotas(id: number) {
-    const materia = this.ControlMateria.find(m => m.id === id);  // Encuentra la materia por id
-    return materia ? materia.notas : [];  // Si la materia existe, devuelve las notas, si no, un arreglo vacío
-  }
-
 
 }
 

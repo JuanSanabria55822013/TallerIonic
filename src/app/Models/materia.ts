@@ -8,6 +8,7 @@ export interface Materia {
     horario: string;
     observaciones: string;
     notas: number[];
+    promedio: number;
 }
 
 export{Nota} 

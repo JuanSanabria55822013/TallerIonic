@@ -28,9 +28,7 @@ import { AlertController } from '@ionic/angular';
 export class InicioPage implements OnInit {
   controlMateria: Materia[] = [];
   controlNota: Nota[] = [];
-  searchTerm: string = '';
-  Promedio = [];
-  
+  searchTerm: string = '';  
 
   constructor(private controlMateriaService: ControlMateriaService, private controlNotaService: ControlNotaService, private alertController: AlertController) { }
 
@@ -105,4 +103,33 @@ export class InicioPage implements OnInit {
     await alert.present();
   }
 
+
+  Paso(id: number): string {
+    const materia = this.controlMateria.find(m => m.id === id);
+    if (materia) {
+      return materia.promedio >= 3 ? 'Pasó' : 'Perdió';
+    }
+    return '';
+  }
+
+  async eliminarMateria(id: number) {
+    const materia = this.controlMateria.find(m => m.id === id);
+    if (materia && materia.notas && materia.notas.length > 0) {
+      const alert = await this.alertController.create({
+        header: 'Error',
+        message: 'No puedes eliminar la materia porque tiene notas registradas.',
+        buttons: ['OK']
+      });
+      await alert.present();
+    } else {
+      await this.controlMateriaService.BorrarMateria(id);
+      const alert = await this.alertController.create({
+        header: 'Éxito',
+        message: 'Materia eliminada con éxito.',
+        buttons: ['OK']
+      });
+      await alert.present();
+      this.ActualizarPagina(null);  // Refresca la lista de materias
+    }
+  }
 }

@@ -49,8 +49,17 @@ controlNota: Nota[] = [];
 materiaID: any;
 editar: boolean = false;
 titulo = 'Crear Materia'
-notasFiltradasCorte: { [corte: number]: Nota[] } = {};
 searchTerm: string = '';
+notasPrimerCorte:Nota[] = [];
+notasSegundoCorte: Nota[] = [];
+notasTercerCorte: Nota[] = [];
+notasCuartoCorte: Nota[] = [];
+PrimerCorte = 0;
+SegundoCorte = 0;
+TercerCorte = 0;
+CuartoCorte = 0;
+PromedioCortes = 0;
+
 
 Irnota: boolean = false;
 
@@ -62,61 +71,54 @@ Irnota: boolean = false;
     codigo: '',
     horario: '',
     notas: [],
-    observaciones: ''
+    observaciones: '',
+    promedio: 1,
   };
+  
+  Promedio = 0;
 
   constructor(private controlMateriaService: ControlMateriaService, private controlNotaService: ControlNotaService, private router: Router, private activatedRoute: ActivatedRoute,   private alertController: AlertController) { }
   async ngOnInit() {
-    this.materiaID = this.activatedRoute.snapshot.paramMap.get('materiaID'); // Obtener materiaID al inicio
-    await this.loadNotas();
-    console.log(this.controlNota.filter(nota => nota.corte === 1))
+    this.materiaID = this.activatedRoute.snapshot.paramMap.get('materiaID');
+
     if(this.materiaID){
       await this.loadMateria(this.materiaID)
+      await this.loadNotas();
+      this.calcularPromedioCorte()
       this.titulo = this.materia.nombre
       this.editar = true;
-      this.filtrarNotasMateria()
-    }
-
-
-  }
-
-  //Buscar  Notas
-  
-  buscarNotas(event: any) {
-    const searchValue = event.target.value.toLowerCase();
-
-    for (let corte of [1, 2, 3, 4]) {
-      this.notasFiltradasCorte[corte] = this.controlNota.filter(nota =>
-        nota.descripcion.toLowerCase().includes(searchValue) && nota.corte === corte
-      );
+    } else{
+      this.materia.id = this.generarId();
     }
   }
 
-  async loadMateria(id: number){
-    const materia = await this.controlMateriaService.getMateria(id);
-    if(materia){
-      this.materia = materia;
+
+
+  async loadMateria(id: number) {
+    const controlMaterias = await this.controlMateriaService.getControlMateria();
+    const materia = controlMaterias.find(m => m.id === Number(id)); // Asegúrate de convertir a número
+    if (materia) {
+      this.materia = { ...materia }; // Asigna los datos de la materia encontrada al objeto `materia`
+      console.log("Materia cargada", this.materia);
     } else {
-      console.error('Materia no encontrada')
+      console.error('Materia no encontrada');
     }
   }
 
   async loadNotas() {
     this.controlNota = await this.controlNotaService.getControlNota();
     const notasMateria = this.controlNota.filter(nota => nota.idMateria === this.materiaID)
+    console.log(notasMateria)
     if(notasMateria){
       this.materia.notas = notasMateria.map(nota => nota.nota)
+      console.log(this.materia.notas)
     }
-    this.materiaID = this.activatedRoute.snapshot.paramMap.get('materiaID')
-
   }
 
   //Para acualizar los datos de la pagina, refrescarla
   ActualizarPagina(event: any) {
     setTimeout(async () => {
       location.reload()
-      await this.loadNotas();
-      event.target.complete(); 
     }, 2000); 
   }
 
@@ -129,17 +131,33 @@ Irnota: boolean = false;
     }
   }
 
+  calcularPromedioCorte(){
+    this.notasPrimerCorte = this.controlNota.filter(nota => nota.idMateria === this.materiaID && nota.corte === 1)
+    this.notasSegundoCorte = this.controlNota.filter(nota => nota.idMateria === this.materiaID && nota.corte === 2)
+    this.notasTercerCorte = this.controlNota.filter(nota => nota.idMateria === this.materiaID && nota.corte === 3)
+    this.notasCuartoCorte = this.controlNota.filter(nota => nota.idMateria === this.materiaID && nota.corte === 4)
 
-  filtrarNotasMateria() {
-    const cortes = [1,2,3,4]; // Define los cortes
+    this.notasPrimerCorte.forEach(nota =>{
+      this.PrimerCorte += nota.nota;
+    })
+    this.notasSegundoCorte.forEach(nota =>{
+      this.SegundoCorte += nota.nota;
+    })
+    this.notasTercerCorte.forEach(nota => {
+      this.TercerCorte += nota.nota;
+    })
+    this.notasCuartoCorte.forEach(nota =>{
+      this.CuartoCorte += nota.nota
+    })
+    this.PrimerCorte = (this.PrimerCorte / this.notasPrimerCorte.length);
+    this.SegundoCorte = (this.SegundoCorte / this.notasSegundoCorte.length);
+    this.TercerCorte = (this.TercerCorte / this.notasTercerCorte.length);
+    this.CuartoCorte = (this.CuartoCorte/ this.notasCuartoCorte.length);
 
-    // Filtrar las notas por idMateria y corte al mismo tiempo
-    cortes.forEach(corte => {
-      this.notasFiltradasCorte[corte] = this.controlNota.filter(nota =>
-        nota.idMateria === this.materia.id && nota.corte === corte
-      );
-      console.log(this.controlNota.filter(nota => nota.corte === corte))  
-    });
+    this.Promedio = (this.PrimerCorte*0.2 || 0) + (this.SegundoCorte*0.2 || 0 ) + (this.TercerCorte*0.2 || 0) + (this.CuartoCorte*0.4 || 0)
+    this.materia.promedio = this.Promedio
+    this.controlMateriaService.ActualizarMateria(this.materia);
+    console.log( 'Promedio materia', this.Promedio)
   }
 
 
@@ -185,18 +203,16 @@ Irnota: boolean = false;
   // crear la materia, guardarla en el storage
   async crearMateria() {
     await this.controlMateriaService.CrearMateria(this.materia); // Guardar materia
-    await this.controlMateriaService.loadMaterias()
-    if(this.Irnota === false){
-      this.router.navigate(['/inicio']); 
-    }
-     // Navegar de vuelta al inicio
-    this.mostrarAlerta('Materia guardada con éxito');
+    this.materiaID = this.materia.id
+    this.mostrarAlerta('Se creo la materia con exito')
   }
 
   // Para actualizarNota
 
   async actualizarMateria() {
+    console.log("materia Cargada", this.materia)
     await this.controlMateriaService.ActualizarMateria(this.materia);
+    await this.controlMateriaService.loadMaterias()
     this.router.navigate(['/inicio']);
 }
 
@@ -204,19 +220,18 @@ Irnota: boolean = false;
     if(this.materiaID){
       this.Irnota === false;
       } else {
-      this.crearMateria()
       this.Irnota === true;
+      this.crearMateria()
     }
-  }
-// limpiar todo el storage de notas
-  async clearStorage(){
-    await this.controlNotaService.clear();
-    this.controlNota = []
   }
 
   // borrar nota de forma individual
   async borrarNota(id: number){
     await this.controlNotaService.BorrarNota(id)
+  }
+
+  generarId(): number {
+    return Math.floor(Math.random() * 10000); 
   }
 
 }

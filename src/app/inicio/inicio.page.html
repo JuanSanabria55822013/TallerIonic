@@ -56,10 +56,15 @@
 
     <!-- Lista de materias cuando sí existen -->
     <ion-list *ngIf="controlMateria.length > 0">
-      <ion-item *ngFor="let materia of controlMateria" [routerLink]="['/materia', materia.id]" class="materia_item">
+      <ion-item *ngFor="let materia of controlMateria" class="materia_item">
         <ion-label>
-          {{materia.nombre}} - {{materia.notas}}
+          {{materia.nombre}} - {{materia.promedio}}  -   <span [ngStyle]="{'color': materia.promedio >= 3 ? 'green' : 'red'}">
+            {{ Paso(materia.id) }}
+          </span>
         </ion-label>
+         <ion-button color="danger" (click)="eliminarMateria(materia.id)">ELIMINAR</ion-button>
+         <ion-button color="primary" [routerLink]="['/materia', materia.id]" >MODIFICAR</ion-button>
+         
       </ion-item>
     </ion-list>
 

@@ -59,9 +59,17 @@ async ngOnInit(){
     await this.loadNota(this.notaID);
   } else {
     this.TextGuardar = 'Crear Nota'
+    this.nota.id = this.generarId()
   }
 
 }
+
+validarNota(valor: number) {
+  if (valor > 5) {
+    this.nota.nota = 5; // Si el valor es mayor a 5, lo establece en 5
+  }
+}
+
 async loadNota(id: number) {
   const nota = await this.controlNotaService.getNota(id);
   if (nota) {
@@ -80,7 +88,7 @@ GuardarNota(){
 }
 
 async actualizarNota() {
-    await this.controlNotaService.ActualizarNota(this.nota);
+  await this.controlNotaService.ActualizarNota(this.nota);
   this.router.navigate(['/materia', this.nota.idMateria]);  // Redirigir a la materia después de guardar
 }
 
@@ -88,6 +96,10 @@ async actualizarNota() {
     this.nota.idMateria = this.MateriaID
     await this.controlNotaService.CrearNota(this.nota);
     this.router.navigate(['/materia', this.nota.idMateria])
+  }
+
+  generarId(): number {
+    return Math.floor(Math.random() * 10000); // Genera un número aleatorio entre 0 y 9999
   }
 
 
